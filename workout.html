@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NEXUS TRACKER | V8</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --neon-blue: #00f7ff;
+            --neon-purple: #bc13fe;
+            --neon-green: #0aff0a;
+            --neon-yellow: #ffcc00;
+            --panel-bg: rgba(10, 10, 15, 0.85);
+            --input-bg: rgba(0, 0, 0, 0.6);
+            --border-color: #333;
+            --text-main: #e0e0e0;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: #000;
+            color: var(--text-main);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-bottom: 80px;
+            overflow-x: hidden;
+        }
+
+        /* --- BACKGROUND ANIMATION (Digital Rain) --- */
+        .bg-animation {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;
+            --c: #09f;
+            background-color: #000;
+            background-image: radial-gradient(4px 100px at 0px 235px, var(--c), #0000), radial-gradient(4px 100px at 300px 235px, var(--c), #0000), radial-gradient(1.5px 1.5px at 150px 117.5px, var(--c) 100%, #0000 150%), radial-gradient(4px 100px at 0px 252px, var(--c), #0000), radial-gradient(4px 100px at 300px 252px, var(--c), #0000), radial-gradient(1.5px 1.5px at 150px 126px, var(--c) 100%, #0000 150%), radial-gradient(4px 100px at 0px 150px, var(--c), #0000), radial-gradient(4px 100px at 300px 150px, var(--c), #0000), radial-gradient(1.5px 1.5px at 150px 75px, var(--c) 100%, #0000 150%), radial-gradient(4px 100px at 0px 253px, var(--c), #0000), radial-gradient(4px 100px at 300px 253px, var(--c), #0000), radial-gradient(1.5px 1.5px at 150px 126.5px, var(--c) 100%, #0000 150%), radial-gradient(4px 100px at 0px 204px, var(--c), #0000), radial-gradient(4px 100px at 300px 204px, var(--c), #0000), radial-gradient(1.5px 1.5px at 150px 102px, var(--c) 100%, #0000 150%), radial-gradient(4px 100px at 0px 134px, var(--c), #0000), radial-gradient(4px 100px at 300px 134px, var(--c), #0000), radial-gradient(1.5px 1.5px at 150px 67px, var(--c) 100%, #0000 150%), radial-gradient(4px 100px at 0px 179px, var(--c), #0000), radial-gradient(4px 100px at 300px 179px, var(--c), #0000), radial-gradient(1.5px 1.5px at 150px 89.5px, var(--c) 100%, #0000 150%), radial-gradient(4px 100px at 0px 299px, var(--c), #0000), radial-gradient(4px 100px at 300px 299px, var(--c), #0000), radial-gradient(1.5px 1.5px at 150px 149.5px, var(--c) 100%, #0000 150%), radial-gradient(4px 100px at 0px 215px, var(--c), #0000), radial-gradient(4px 100px at 300px 215px, var(--c), #0000), radial-gradient(1.5px 1.5px at 150px 107.5px, var(--c) 100%, #0000 150%), radial-gradient(4px 100px at 0px 281px, var(--c), #0000), radial-gradient(4px 100px at 300px 281px, var(--c), #0000), radial-gradient(1.5px 1.5px at 150px 140.5px, var(--c) 100%, #0000 150%), radial-gradient(4px 100px at 0px 158px, var(--c), #0000), radial-gradient(4px 100px at 300px 158px, var(--c), #0000), radial-gradient(1.5px 1.5px at 150px 79px, var(--c) 100%, #0000 150%), radial-gradient(4px 100px at 0px 210px, var(--c), #0000), radial-gradient(4px 100px at 300px 210px, var(--c), #0000), radial-gradient(1.5px 1.5px at 150px 105px, var(--c) 100%, #0000 150%);
+            background-size: 300px 235px, 300px 235px, 300px 235px, 300px 252px, 300px 252px, 300px 252px, 300px 150px, 300px 150px, 300px 150px, 300px 253px, 300px 253px, 300px 253px, 300px 204px, 300px 204px, 300px 204px, 300px 134px, 300px 134px, 300px 134px, 300px 179px, 300px 179px, 300px 179px, 300px 299px, 300px 299px, 300px 299px, 300px 215px, 300px 215px, 300px 215px, 300px 281px, 300px 281px, 300px 281px, 300px 158px, 300px 158px, 300px 158px, 300px 210px, 300px 210px, 300px 210px;
+            animation: hi 150s linear infinite;
+        }
+        .bg-animation::after { content: ""; position: absolute; inset: 0; z-index: 1; backdrop-filter: blur(1em) brightness(6); background-image: radial-gradient(circle at 50% 50%, #0000 0, #0000 2px, hsl(0 0 4%) 2px); background-size: 8px 8px; opacity: 0.5; }
+        @keyframes hi { 0% { background-position: 0px 220px, 3px 220px, 151.5px 337.5px; } to { background-position: 0px 6800px, 3px 6800px, 151.5px 6917.5px; } }
+
+        /* --- TOP NAV (Glitch Buttons) --- */
+        nav.top-nav {
+            background: rgba(0,0,0,0.8); border-bottom: 1px solid var(--border-color); padding: 0 15px;
+            display: flex; justify-content: space-between; align-items: center; height: 70px;
+            position: sticky; top: 0; z-index: 200; backdrop-filter: blur(10px);
+        }
+        .nav-brand { font-family: 'Orbitron', sans-serif; font-weight: 700; color: #fff; font-size: 1.2rem; }
+        .nav-brand span { color: var(--neon-blue); }
+        .nav-links { display: flex; gap: 15px; }
+
+        /* BUTTON 2: GLITCH STYLE */
+        .glitch-btn {
+            padding: 8px 20px; font-size: 0.8rem; border: none; border-radius: 5px; color: white;
+            background-color: transparent; position: relative; font-family: 'Orbitron', sans-serif; cursor: pointer;
+        }
+        .glitch-btn::after {
+            --move1: inset(50% 50% 50% 50%); --move2: inset(31% 0 40% 0); --move3: inset(39% 0 15% 0); --move4: inset(45% 0 40% 0); --move5: inset(45% 0 6% 0); --move6: inset(14% 0 61% 0);
+            clip-path: var(--move1); content: attr(data-text); position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: block;
+        }
+        .glitch-btn:hover::after, .glitch-btn.active::after {
+            animation: glitch_4011 1s; text-shadow: 10 10px 10px black; animation-timing-function: steps(2, end);
+            text-shadow: -3px -3px 0px #1df2f0, 3px 3px 0px #E94BE8; background-color: transparent; border: 3px solid rgb(0, 255, 213);
+        }
+        .glitch-btn:hover, .glitch-btn.active {
+            text-shadow: -1px -1px 0px #1df2f0, 1px 1px 0px #E94BE8; background-color: transparent;
+            border: 1px solid rgb(0, 255, 213); box-shadow: 0px 10px 10px -10px rgb(0, 255, 213);
+        }
+        @keyframes glitch_4011 {
+            0% { clip-path: var(--move1); transform: translate(0px,-10px); } 10% { clip-path: var(--move2); transform: translate(-10px,10px); } 20% { clip-path: var(--move3); transform: translate(10px,0px); } 30% { clip-path: var(--move4); transform: translate(-10px,10px); } 40% { clip-path: var(--move5); transform: translate(10px,-10px); } 50% { clip-path: var(--move6); transform: translate(-10px,10px); } 60% { clip-path: var(--move1); transform: translate(10px,-10px); } 70% { clip-path: var(--move3); transform: translate(-10px,10px); } 80% { clip-path: var(--move2); transform: translate(10px,-10px); } 90% { clip-path: var(--move4); transform: translate(-10px,10px); } 100% { clip-path: var(--move1); transform: translate(0); }
+        }
+
+        /* --- BUTTON 1: BACKUP STYLE (Play Button) --- */
+        .backup-btn-styled {
+            position: relative; width: 100%; height: 4em; outline: none; transition: 0.1s; background-color: transparent;
+            border: none; font-size: 13px; font-weight: bold; color: #ddebf0; cursor: pointer; font-family: 'Orbitron', sans-serif; margin-top: 20px;
+        }
+        #clip {
+            --color: #2761c3; position: absolute; top: 0; overflow: hidden; width: 100%; height: 100%; border: 5px double var(--color);
+            box-shadow: inset 0px 0px 15px #195480; -webkit-clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+        }
+        .arrow { position: absolute; transition: 0.2s; background-color: #2761c3; top: 35%; width: 11%; height: 30%; }
+        #leftArrow { left: -13.5%; -webkit-clip-path: polygon(100% 0, 100% 100%, 0 50%); }
+        #rightArrow { -webkit-clip-path: polygon(100% 49%, 0 0, 0 100%); left: 102%; }
+        .backup-btn-styled:hover #rightArrow { background-color: #27c39f; left: -15%; animation: 0.6s ease-in-out both infinite alternate rightArrow8; }
+        .backup-btn-styled:hover #leftArrow { background-color: #27c39f; left: 103%; animation: 0.6s ease-in-out both infinite alternate leftArrow8; }
+        .corner { position: absolute; width: 4em; height: 4em; background-color: #2761c3; box-shadow: inset 1px 1px 8px #2781c3; transform: scale(1) rotate(45deg); transition: 0.2s; }
+        #rightTop { top: -1.98em; left: 91%; } #leftTop { top: -1.96em; left: -3.0em; } #leftBottom { top: 2.10em; left: -2.15em; } #rightBottom { top: 45%; left: 88%; }
+        .backup-btn-styled:hover .corner { transform: scale(1.25) rotate(45deg); }
+        .backup-btn-styled:hover #clip { animation: 0.2s ease-in-out 0.55s both greenLight8; --color: #27c39f; }
+        @keyframes changeColor8 { from { background-color: #2781c3; } to { background-color: #27c39f; } }
+        @keyframes lightEffect8 { from { box-shadow: 1px 1px 5px #27c39f; } to { box-shadow: 0 0 2px #27c39f; } }
+        @keyframes greenLight8 { from { } to { box-shadow: inset 0px 0px 32px #27c39f; } }
+        @keyframes leftArrow8 { from { transform: translate(0px); } to { transform: translateX(10px); } }
+        @keyframes rightArrow8 { from { transform: translate(0px); } to { transform: translateX(-10px); } }
+
+        /* --- PYRAMID LOADER (Rest Day) --- */
+        .pyramid-loader { position: relative; width: 200px; height: 200px; display: block; margin: 0 auto 30px auto; transform-style: preserve-3d; transform: rotateX(-20deg); }
+        .wrapper { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotateY(360deg); } }
+        .pyramid-loader .wrapper .side { width: 70px; height: 70px; position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: auto; transform-origin: center top; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+        .pyramid-loader .wrapper .side1 { transform: rotateZ(-30deg) rotateY(90deg); background: conic-gradient( #2BDEAC, #F028FD, #D8CCE6, #2F2585); }
+        .pyramid-loader .wrapper .side2 { transform: rotateZ(30deg) rotateY(90deg); background: conic-gradient( #2F2585, #D8CCE6, #F028FD, #2BDEAC); }
+        .pyramid-loader .wrapper .side3 { transform: rotateX(30deg); background: conic-gradient( #2F2585, #D8CCE6, #F028FD, #2BDEAC); }
+        .pyramid-loader .wrapper .side4 { transform: rotateX(-30deg); background: conic-gradient( #2BDEAC, #F028FD, #D8CCE6, #2F2585); }
+        .pyramid-loader .wrapper .shadow { width: 60px; height: 60px; background: #8B5AD5; position: absolute; top: 0; left: 0; right: 0; bottom: 0; margin: auto; transform: rotateX(90deg) translateZ(-40px); filter: blur(12px); }
+
+        /* --- DAILY GOALS --- */
+        .goals-card {
+            background: var(--panel-bg); border: 1px solid var(--neon-purple); border-radius: 8px;
+            padding: 15px; margin-bottom: 20px; display: flex; justify-content: space-between;
+            backdrop-filter: blur(5px); box-shadow: 0 0 10px rgba(188, 19, 254, 0.2);
+        }
+        .goal-item { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; text-align: center; }
+        .goal-icon { font-size: 1.5rem; color: var(--neon-blue); margin-bottom: 5px; }
+        .goal-label { font-size: 0.6rem; color: #aaa; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
+        .goal-checkbox {
+            appearance: none; width: 25px; height: 25px; border: 2px solid #444; border-radius: 4px; background: rgba(0,0,0,0.5);
+            cursor: pointer; position: relative;
+        }
+        .goal-checkbox:checked { background: var(--neon-green); border-color: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); }
+        .goal-checkbox:checked::after { content: '✓'; position: absolute; color: black; font-weight: bold; font-size: 16px; top: -2px; left: 4px; }
+
+        /* --- STANDARD STYLES --- */
+        .scroller-container { position: sticky; top: 70px; z-index: 100; background: rgba(5,5,5,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); }
+        .week-nav { display: flex; overflow-x: auto; gap: 10px; padding: 10px 15px; scrollbar-width: none; border-bottom: 1px solid #222; }
+        .week-nav::-webkit-scrollbar { display: none; }
+        .week-btn { background: rgba(0,0,0,0.5); border: 1px solid #444; color: #888; padding: 6px 14px; border-radius: 20px; font-family: 'Orbitron', sans-serif; font-size: 0.75rem; white-space: nowrap; transition: 0.3s; }
+        .week-btn.active { border-color: var(--neon-purple); color: var(--neon-purple); background: rgba(188, 19, 254, 0.2); box-shadow: 0 0 10px rgba(188,19,254,0.3); }
+        
+        .day-nav { display: flex; justify-content: space-between; padding: 10px 15px; background: rgba(10,10,15,0.8); }
+        .day-btn { background: transparent; border: none; color: #555; font-family: 'Orbitron', sans-serif; font-size: 0.9rem; padding: 5px; position: relative; }
+        .day-btn.active { color: var(--neon-blue); font-weight: bold; }
+        .day-btn.active::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 100%; height: 2px; background: var(--neon-blue); box-shadow: 0 0 5px var(--neon-blue); }
+
+        .view-section { display: none; padding: 15px; max-width: 600px; margin: 0 auto; }
+        .view-section.active-view { display: block; }
+        
+        .meta-card { background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; backdrop-filter: blur(5px); }
+        .meta-row { display: flex; gap: 10px; }
+        .meta-group { flex: 1; }
+        .meta-group label { font-size: 0.75rem; color: var(--neon-blue); display: block; margin-bottom: 5px; font-family: 'Orbitron', sans-serif; }
+        .meta-input { width: 100%; background: var(--input-bg); border: 1px solid #333; color: white; padding: 10px; border-radius: 4px; font-family: 'Rajdhani', sans-serif; font-size: 1rem; }
+        .meta-input[type="date"] { color-scheme: dark; }
+
+        .ex-card { background: var(--panel-bg); border-left: 3px solid var(--neon-blue); border-radius: 6px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); backdrop-filter: blur(5px); }
+        .ex-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .ex-title { font-size: 1.1rem; font-weight: 700; color: #fff; line-height: 1.2; }
+        .rest-badge { background: rgba(0, 247, 255, 0.1); color: var(--neon-blue); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-family: 'Orbitron', sans-serif; white-space: nowrap; margin-left: 10px; }
+        .ex-details { display: flex; gap: 15px; margin-bottom: 12px; font-size: 0.9rem; color: #888; border-bottom: 1px solid #222; padding-bottom: 8px; }
+        .detail-item i { color: var(--neon-purple); margin-right: 5px; }
+        
+        .warmup-section { background: rgba(255, 204, 0, 0.05); border: 1px dashed var(--neon-yellow); border-radius: 4px; padding: 10px; margin-bottom: 15px; }
+        .warmup-header { font-size: 0.75rem; color: var(--neon-yellow); font-family: 'Orbitron', sans-serif; margin-bottom: 5px; }
+
+        .sets-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+        .set-input-group { flex: 1; min-width: 70px; display: flex; flex-direction: column; }
+        .set-input-group label { font-size: 0.7rem; color: #555; margin-bottom: 2px; text-align: center; }
+        .weight-input { background: #000; border: 1px solid #444; color: var(--neon-green); padding: 8px; border-radius: 4px; width: 100%; font-size: 1rem; font-family: 'Orbitron', sans-serif; text-align: center; }
+        .weight-input.warmup { color: var(--neon-yellow); border-color: #554400; }
+        .ex-notes { font-size: 0.8rem; color: #666; margin-top: 10px; font-style: italic; }
+
+        .journal-container { display: flex; flex-direction: column; gap: 20px; }
+        .new-entry-card { background: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; backdrop-filter: blur(5px); }
+        .entry-textarea { width: 100%; background: #151520; border: 1px solid #333; color: white; padding: 10px; border-radius: 4px; font-family: 'Rajdhani', sans-serif; font-size: 1rem; min-height: 100px; resize: vertical; margin-bottom: 10px; }
+        
+        .save-btn { background: var(--neon-blue); color: #000; border: none; padding: 10px 20px; font-family: 'Orbitron', sans-serif; font-weight: bold; cursor: pointer; border-radius: 4px; width: 100%; transition: 0.3s; }
+        .save-btn:hover { box-shadow: 0 0 15px var(--neon-blue); }
+
+        .entry-list { display: flex; flex-direction: column-reverse; gap: 15px; }
+        .journal-entry { background: rgba(14,14,18,0.9); border-left: 2px solid var(--neon-purple); padding: 15px; border-radius: 0 8px 8px 0; }
+        .entry-date { color: var(--neon-purple); font-size: 0.8rem; margin-bottom: 5px; font-family: 'Orbitron', sans-serif; }
+        .entry-content { color: #ccc; white-space: pre-wrap; line-height: 1.5; }
+        
+        .rest-view { text-align: center; padding: 50px 20px; color: #666; }
+        .rest-view h2 { color: #fff; margin-bottom: 10px; text-shadow: 0 0 10px var(--neon-purple); }
+
+    </style>
+</head>
+<body>
+    
+    <div class="bg-animation"></div>
+
+    <nav class="top-nav">
+        <div class="nav-brand">JUICY <span>TODAY</span></div>
+        <div class="nav-links">
+            <button class="glitch-btn active" id="nav-tracker" data-text="WORKOUTS" onclick="switchView('tracker')">WORKOUTS</button>
+            <button class="glitch-btn" id="nav-journal" data-text="JOURNAL" onclick="switchView('journal')">JOURNAL</button>
+        </div>
+    </nav>
+
+    <div id="view-tracker" class="view-section active-view">
+        <div class="scroller-container">
+            <div class="week-nav" id="week-scroller"></div>
+            <div class="day-nav">
+                <button class="day-btn active" onclick="setDay(1)">D1</button>
+                <button class="day-btn" onclick="setDay(2)">D2</button>
+                <button class="day-btn" onclick="setDay(3)">D3</button>
+                <button class="day-btn" onclick="setDay(4)">D4</button>
+                <button class="day-btn" onclick="setDay(5)">D5</button>
+                <button class="day-btn" onclick="setDay(6)">D6</button>
+                <button class="day-btn" onclick="setDay(7)">D7</button>
+            </div>
+        </div>
+
+        <div id="tracker-content" style="margin-top: 20px;"></div>
+    </div>
+
+    <div id="view-journal" class="view-section">
+        <div class="journal-container">
+            <h2 style="color:white; margin-bottom:10px; text-shadow: 0 0 5px var(--neon-blue);">PERSONAL LOG</h2>
+            <div class="new-entry-card">
+                <textarea id="journal-input" class="entry-textarea" placeholder="Log your thoughts..."></textarea>
+                <button class="save-btn" onclick="addJournalEntry()">ADD ENTRY</button>
+            </div>
+            <div class="entry-list" id="journal-list"></div>
+
+            <button class="backup-btn-styled" onclick="exportData()">
+                SYSTEM BACKUP
+                <div id="clip">
+                    <div id="leftTop" class="corner"></div>
+                    <div id="rightBottom" class="corner"></div>
+                    <div id="rightTop" class="corner"></div>
+                    <div id="leftBottom" class="corner"></div>
+                </div>
+                <span id="rightArrow" class="arrow"></span>
+                <span id="leftArrow" class="arrow"></span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- LOGIC ---
+        let currentWeek = 1; let currentDay = 1; let currentView = 'tracker';
+        
+        // --- Updated Rest Times Based on Rules: Heavy=3m, Volume=90s, Iso=60s, Weak=45s ---
+        const plan = {
+            1: { title: "UPPER BODY (POWER)", exercises: [ 
+                { name: "Incline Dumbbell Press", isCompound: true, sets: 4, reps: "6-8", rest: "3:00", notes: "Heavy Compound" }, 
+                { name: "Weighted Pull-ups / Lat Pulldown", isCompound: true, sets: 3, reps: "6-8", rest: "2:30", notes: "Heavy Compound" }, 
+                { name: "Seated DB Overhead Press", isCompound: true, sets: 3, reps: "6-8", rest: "2:30", notes: "Heavy Compound" }, 
+                { name: "T-Bar Row (Chest Supported)", isCompound: true, sets: 3, reps: "8-10", rest: "90s", notes: "Volume Compound" }, 
+                { name: "Barbell Bicep Curl", sets: 3, reps: "8-10", rest: "60s", notes: "Isolation" }, 
+                { name: "Overhead Cable Tricep Ext", sets: 3, reps: "8-10", rest: "60s", notes: "Isolation" }, 
+                { name: "Neck Ext/Flexion", sets: 3, reps: "15-20", rest: "45s", notes: "Weak Point" } 
+            ] },
+            2: { title: "LOWER BODY (POWER)", exercises: [ 
+                { name: "Leg Press / Supp. Squat / BB Squat", isCompound: true, sets: 3, reps: "6-8", rest: "3:00", notes: "Heavy Compound" }, 
+                { name: "Romanian Deadlift (RDL)", isCompound: true, sets: 3, reps: "8-10", rest: "2:30", notes: "Heavy Compound" }, 
+                { name: "Leg Press (High/Wide)", sets: 3, reps: "8-10", rest: "90s", notes: "Volume Compound" }, 
+                { name: "Lying Hamstring Curl", sets: 3, reps: "8-10", rest: "60s", notes: "Isolation" }, 
+                { name: "Standing Calf Raise", sets: 4, reps: "8-12", rest: "45s", notes: "Weak Point" }, 
+                { name: "Weighted Farmers Walk", sets: 3, reps: "40-60ft", rest: "45s", notes: "Weak Point / Grip" } 
+            ] },
+            3: { type: "rest", title: "SYSTEM RECHARGE", desc: "Critical Recovery Protocol Active." },
+            4: { title: "PUSH (HYPERTROPHY)", exercises: [ 
+                { name: "Flat Dumbbell Press", isCompound: true, sets: 3, reps: "10-12", rest: "3:00", notes: "Heavy Compound" }, 
+                { name: "Incline Cable Fly", sets: 3, reps: "12-15", rest: "60s", notes: "Isolation" }, 
+                { name: "Cable Lateral Raise", sets: 4, reps: "12-15", rest: "60s", notes: "Isolation" }, 
+                { name: "Cable Front Raise", sets: 4, reps: "12-15", rest: "60s", notes: "Isolation" }, 
+                { name: "Pec-Deck Fly", sets: 3, reps: "12-15", rest: "60s", notes: "Isolation" }, 
+                { name: "Rope Overhead Tricep Ext", sets: 4, reps: "12-15", rest: "60s", notes: "Isolation" }, 
+                { name: "Single-Arm Cable Pushdown", sets: 3, reps: "12-15", rest: "60s", notes: "Isolation" } 
+            ] },
+            5: { title: "PULL (HYPERTROPHY)", exercises: [ 
+                { name: "Wide-Grip Lat Pulldown", isCompound: true, sets: 3, reps: "10-12", rest: "90s", notes: "Volume Compound" }, 
+                { name: "Chest-Supported DB Row", isCompound: true, sets: 3, reps: "10-12", rest: "90s", notes: "Volume Compound" }, 
+                { name: "Face Pull", sets: 4, reps: "15-20", rest: "60s", notes: "Isolation" }, 
+                { name: "Reverse Pec-Deck Fly", sets: 4, reps: "15-20", rest: "60s", notes: "Isolation" }, 
+                { name: "High Cable Bicep Curl", sets: 4, reps: "10-12", rest: "60s", notes: "Isolation" }, 
+                { name: "Hammer Curl", sets: 3, reps: "10-12", rest: "60s", notes: "Isolation" }, 
+                { name: "Barbell Wrist Curl", sets: 3, reps: "15-20", rest: "45s", notes: "Weak Point" } 
+            ] },
+            6: { title: "LEGS (HYPERTROPHY)", exercises: [ 
+                { name: "Leg Extension", sets: 3, reps: "15-20", rest: "60s", notes: "Isolation / Pre-exhaust" }, 
+                { name: "Single-Leg Leg Press", isCompound: true, sets: 3, reps: "12-15", rest: "90s", notes: "Volume Compound" }, 
+                { name: "Seated Hamstring Curl", sets: 3, reps: "12-15", rest: "60s", notes: "Isolation" }, 
+                { name: "Hip Abduction Machine", sets: 3, reps: "15-20", rest: "45s", notes: "Weak Point / Glutes" }, 
+                { name: "Seated Calf Raise", sets: 5, reps: "15-20", rest: "45s", notes: "Weak Point" } 
+            ] },
+            7: { type: "rest", title: "SYSTEM RECHARGE", desc: "Full System Reset & Growth." }
+        };
+
+        window.onload = function() { renderWeeks(); loadState(); renderTracker(); renderJournal(); };
+
+        function switchView(view) {
+            currentView = view;
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
+            document.getElementById(`view-${view}`).classList.add('active-view');
+            document.querySelectorAll('.glitch-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(`nav-${view}`).classList.add('active');
+        }
+
+        function renderWeeks() {
+            const container = document.getElementById('week-scroller');
+            let html = '';
+            for(let i=1; i<=8; i++) { html += `<button class="week-btn ${i === currentWeek ? 'active' : ''}" onclick="setWeek(${i})">WEEK ${i}</button>`; }
+            container.innerHTML = html;
+        }
+
+        function setWeek(w) { currentWeek = w; saveState(); renderWeeks(); renderTracker(); }
+        function setDay(d) { currentDay = d; saveState(); document.querySelectorAll('.day-btn').forEach((btn, i) => btn.classList.toggle('active', i+1 === d)); renderTracker(); }
+
+        function renderTracker() {
+            const container = document.getElementById('tracker-content');
+            const data = plan[currentDay];
+            
+            if (data.type === 'rest') {
+                container.innerHTML = `
+                    <div class="rest-view">
+                        <div class="pyramid-loader">
+                          <div class="wrapper">
+                            <span class="side side1"></span><span class="side side2"></span><span class="side side3"></span><span class="side side4"></span><span class="shadow"></span>
+                          </div>  
+                        </div>
+                        <h2>${data.title}</h2><p>${data.desc}</p>
+                    </div>`;
+                return;
+            }
+
+            let html = '';
+            const prefix = `nexus_w${currentWeek}_d${currentDay}`;
+            const dateKey = `${prefix}_date`; const timeKey = `${prefix}_time`; const noteKey = `${prefix}_note`;
+            const savedDate = localStorage.getItem(dateKey) || ""; const savedTime = localStorage.getItem(timeKey) || ""; const savedNote = localStorage.getItem(noteKey) || "";
+
+            // --- DAILY GOALS SECTION ---
+            const goalSteps = `${prefix}_goal_steps`; const goalProt = `${prefix}_goal_prot`; const goalWater = `${prefix}_goal_water`;
+            const checkSteps = localStorage.getItem(goalSteps) === 'true' ? 'checked' : '';
+            const checkProt = localStorage.getItem(goalProt) === 'true' ? 'checked' : '';
+            const checkWater = localStorage.getItem(goalWater) === 'true' ? 'checked' : '';
+
+            html += `
+                <div class="goals-card">
+                    <div class="goal-item"><i class="fa-solid fa-shoe-prints goal-icon"></i><span class="goal-label">10K STEPS</span><input type="checkbox" class="goal-checkbox" ${checkSteps} onclick="saveData('${goalSteps}', this.checked)"></div>
+                    <div class="goal-item"><i class="fa-solid fa-drumstick-bite goal-icon"></i><span class="goal-label">200g PROT</span><input type="checkbox" class="goal-checkbox" ${checkProt} onclick="saveData('${goalProt}', this.checked)"></div>
+                    <div class="goal-item"><i class="fa-solid fa-droplet goal-icon"></i><span class="goal-label">1 GAL H2O</span><input type="checkbox" class="goal-checkbox" ${checkWater} onclick="saveData('${goalWater}', this.checked)"></div>
+                </div>
+            `;
+
+            // --- META DATA ---
+            html += `<div class="meta-card"><div class="meta-row"><div class="meta-group"><label>DATE</label><input type="date" class="meta-input" value="${savedDate}" onchange="saveData('${dateKey}', this.value)"></div><div class="meta-group"><label>DURATION</label><input type="text" class="meta-input" placeholder="e.g. 1h 15m" value="${savedTime}" oninput="saveData('${timeKey}', this.value)"></div></div><div class="meta-group"><label>DAILY WORKOUT NOTES</label><textarea class="meta-input" rows="2" placeholder="Energy levels, focus..." oninput="saveData('${noteKey}', this.value)">${savedNote}</textarea></div></div>`;
+
+            html += `<h3 style="margin-bottom:15px; color:var(--neon-blue)">${data.title}</h3>`;
+
+            // --- EXERCISES ---
+            data.exercises.forEach((ex, index) => {
+                let warmupHtml = '';
+                if(ex.isCompound) {
+                    let inputs = '';
+                    for(let w=1; w<=3; w++) {
+                        const k = `${prefix}_ex${index}_warm${w}`;
+                        const v = localStorage.getItem(k) || "";
+                        inputs += `<div class="set-input-group"><label>W${w}</label><input type="text" class="weight-input warmup" placeholder="lbs" value="${v}" inputmode="decimal" oninput="saveData('${k}', this.value)"></div>`;
+                    }
+                    warmupHtml = `<div class="warmup-section"><div class="warmup-header"><i class="fa-solid fa-fire"></i> WARM UP</div><div class="sets-grid">${inputs}</div></div>`;
+                }
+
+                let setsHtml = '';
+                for(let s=0; s<ex.sets; s++) {
+                    const k = `${prefix}_ex${index}_set${s}`;
+                    const v = localStorage.getItem(k) || "";
+                    setsHtml += `<div class="set-input-group"><label>SET ${s+1}</label><input type="text" class="weight-input" placeholder="lbs" value="${v}" inputmode="decimal" oninput="saveData('${k}', this.value)"></div>`;
+                }
+
+                html += `
+                    <div class="ex-card">
+                        <div class="ex-header"><div class="ex-title">${ex.name}</div><div class="rest-badge"><i class="fa-regular fa-clock"></i> ${ex.rest}</div></div>
+                        <div class="ex-details"><div class="detail-item"><i class="fa-solid fa-layer-group"></i> ${ex.sets} Sets</div><div class="detail-item"><i class="fa-solid fa-rotate"></i> ${ex.reps} Reps</div></div>
+                        ${warmupHtml}
+                        <div class="sets-grid" style="margin-top:10px;">${setsHtml}</div>
+                        <div class="ex-notes">${ex.notes}</div>
+                    </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderJournal() {
+            const list = document.getElementById('journal-list');
+            const entries = JSON.parse(localStorage.getItem('nexus_journal') || "[]");
+            if (entries.length === 0) { list.innerHTML = `<div style="text-align:center; color:#555; padding:20px;">No entries yet. Start writing...</div>`; return; }
+            let html = '';
+            entries.forEach(entry => { html += `<div class="journal-entry"><div class="entry-date">${entry.date}</div><div class="entry-content">${entry.text}</div></div>`; });
+            list.innerHTML = html;
+        }
+
+        function addJournalEntry() {
+            const input = document.getElementById('journal-input'); const text = input.value.trim();
+            if (!text) return;
+            const entries = JSON.parse(localStorage.getItem('nexus_journal') || "[]");
+            const now = new Date(); const dateStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            entries.push({ date: dateStr, text: text });
+            localStorage.setItem('nexus_journal', JSON.stringify(entries));
+            input.value = ""; renderJournal();
+        }
+
+        function saveData(key, value) { localStorage.setItem(key, value); }
+        function saveState() { localStorage.setItem('nexus_current_week', currentWeek); localStorage.setItem('nexus_current_day', currentDay); }
+        function loadState() {
+            currentWeek = parseInt(localStorage.getItem('nexus_current_week') || 1);
+            currentDay = parseInt(localStorage.getItem('nexus_current_day') || 1);
+            document.querySelectorAll('.day-btn').forEach((btn, i) => btn.classList.toggle('active', i+1 === currentDay));
+        }
+
+        function exportData() {
+            const data = JSON.stringify(localStorage);
+            const blob = new Blob([data], {type: "application/json"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = `nexus_backup_${new Date().toISOString().slice(0,10)}.json`; a.click();
+        }
+    </script>
+</body>
+</html>
